@@ -2,7 +2,7 @@ import axios, { type AxiosResponse } from "axios";
 import type { Incident } from "./types";
 
 const api = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: "https://69ce23b933a09f831b7cf51f.mockapi.io",
 });
 
 // Получить все инциденты
