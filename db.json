@@ -1,0 +1,23 @@
+{
+  "incidents": [
+    {
+      "title": "Попытка взлома",
+      "type": "Взлом",
+      "severity": "Средняя",
+      "status": "В процессе",
+      "date": "29/03/2026",
+      "description": "Попытка взлома пользователя с помощью brute force",
+      "id": "Bg2BJrNAuV0"
+    },
+    {
+      "title": "Тест из консоли",
+      "type": "Сбой",
+      "severity": "Низкая",
+      "status": "На рассмотрении",
+      "date": "02.04.2026",
+      "description": "Проверка POST запроса через DevTools",
+      "id": "KPoYYyiJDSI"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
