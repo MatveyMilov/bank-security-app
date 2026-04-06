@@ -32,12 +32,27 @@ const IncidentDetail: React.FC = () => {
 
   const handleSave = async () => {
     if (!incident || !id) return;
+    // проверка на валидацию
+    if (!incident.title.trim()) {
+      alert("Заголовок не может быть пустым");
+      return;
+    }
+    if (!incident.type.trim()) {
+      alert("Укажите тип угрозы");
+      return;
+    }
+    if (!incident.description.trim()) {
+      alert("Описание обязательно для заполнения");
+      return;
+    }
+
+    // если проверка пройдена то отправляем данные
     try {
       await updateIncident(id, incident);
-      alert("Данные инцидента успешно обновлены!");
+      alert("Данные успешно сохранены!");
       navigate("/");
     } catch (error) {
-      alert("Не удалось обновить данные");
+      alert("Ошибка при сохранении данных");
     }
   };
 
