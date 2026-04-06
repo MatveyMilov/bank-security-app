@@ -218,6 +218,23 @@ body {
   margin-bottom: 20px;
 }
 
+.detail-info .input-field,
+.detail-info .textarea-field,
+.detail-info .status-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-top: 5px; 
+  box-sizing: border-box;
+}
+
+.detail-info .textarea-field {
+  min-height: 120px;
+  resize: vertical; 
+}
+
 .severity-badge {
   padding: 5px 10px;
   border-radius: 20px;
@@ -225,9 +242,9 @@ body {
   font-size: 12px;
 }
 
-.detail-info p {
-  margin: 10px 0;
-  color: #333;
+.detail-info .form-group {
+  margin-bottom: 20px;
+  width: 100%;
 }
 
 .description-box {

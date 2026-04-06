@@ -1,40 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getIncidentById, updateIncident } from '../api';
-import type { Incident } from '../types';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getIncidentById, updateIncident } from "../api";
+import type { Incident } from "../types";
 
 const IncidentDetail: React.FC = () => {
-  // Получаем ID из URL
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  // Состояние для хранения данных инцидента
   const [incident, setIncident] = useState<Incident | null>(null);
-  const [newStatus, setNewStatus] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
 
-  // Загружаем данные при первом рендере
   useEffect(() => {
     if (id) {
       getIncidentById(id)
         .then((response) => {
           setIncident(response.data);
-          setNewStatus(response.data.status); 
         })
-        .catch(() => alert('Ошибка загрузки деталей инцидента'))
+        .catch(() => alert("Ошибка загрузки деталей инцидента"))
         .finally(() => setIsLoading(false));
     }
   }, [id]);
 
-  // Функция сохранения обновленного статуса
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    const { name, value } = e.target;
+    setIncident((prev) => (prev ? { ...prev, [name]: value } : null));
+  };
+
   const handleSave = async () => {
     if (!incident || !id) return;
     try {
-      await updateIncident(id, { status: newStatus as any });
-      alert('Статус успешно обновлен!');
-      navigate('/'); // Возвращаемся на главную
+      await updateIncident(id, incident);
+      alert("Данные инцидента успешно обновлены!");
+      navigate("/");
     } catch (error) {
-      alert('Не удалось обновить статус');
+      alert("Не удалось обновить данные");
     }
   };
 
@@ -43,31 +46,71 @@ const IncidentDetail: React.FC = () => {
 
   return (
     <div className="container detail-card">
-      <button onClick={() => navigate('/')} className="btn-back">← Назад к списку</button>
-      
+      <button onClick={() => navigate("/")} className="btn-back">
+        ← Назад к списку
+      </button>
+
       <div className="detail-header">
-        <h2 className="title">Инцидент #{incident.id}</h2>
-        <span className={`severity-badge severity-${
-          incident.severity === 'Высокая' ? 'high' : incident.severity === 'Средняя' ? 'medium' : 'low'
-        }`}>
-          {incident.severity}
-        </span>
+        <h2 className="title">Редактирование инцидента #{incident.id}</h2>
       </div>
 
       <div className="detail-info">
-        <p><strong>Заголовок:</strong> {incident.title}</p>
-        <p><strong>Тип:</strong> {incident.type}</p>
-        <p><strong>Дата регистрации:</strong> {incident.date}</p>
-        
-        <div className="description-box">
-          <strong>Описание:</strong>
-          <p>{incident.description}</p>
+        {}
+        <div className="form-group">
+          <label>Заголовок:</label>
+          <input
+            name="title"
+            className="input-field"
+            value={incident.title}
+            onChange={handleChange}
+          />
         </div>
-        <div className="status-editor">
+
+        {}
+        <div className="form-group">
+          <label>Тип угрозы:</label>
+          <input
+            name="type"
+            className="input-field"
+            value={incident.type}
+            onChange={handleChange}
+          />
+        </div>
+
+        {}
+        <div className="form-group">
+          <label>Критичность:</label>
+          <select
+            name="severity"
+            value={incident.severity}
+            onChange={handleChange}
+            className="status-select"
+          >
+            <option value="Низкая">Низкая</option>
+            <option value="Средняя">Средняя</option>
+            <option value="Высокая">Высокая</option>
+          </select>
+        </div>
+
+        {}
+        <div className="form-group">
+          <label>Подробное описание:</label>
+          <textarea
+            name="description"
+            className="textarea-field"
+            value={incident.description}
+            onChange={handleChange}
+            rows={5}
+          />
+        </div>
+
+        {}
+        <div className="form-group">
           <label>Текущий статус:</label>
-          <select 
-            value={newStatus} 
-            onChange={(e) => setNewStatus(e.target.value)}
+          <select
+            name="status"
+            value={incident.status}
+            onChange={handleChange}
             className="status-select"
           >
             <option value="На рассмотрении">На рассмотрении</option>
@@ -75,8 +118,11 @@ const IncidentDetail: React.FC = () => {
             <option value="Завершен">Завершен</option>
             <option value="Ложное срабатывание">Ложное срабатывание</option>
           </select>
-          <button onClick={handleSave} className="btn-save">Сохранить изменения</button>
         </div>
+
+        <button onClick={handleSave} className="btn-save">
+          Сохранить все изменения
+        </button>
       </div>
     </div>
   );
