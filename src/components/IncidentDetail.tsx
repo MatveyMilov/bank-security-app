@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { getIncidentById, updateIncident } from "../api";
-import type { Incident } from "../types";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getIncidentById, updateIncident } from '../api';
+import type { Incident } from '../types';
 
 const IncidentDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -9,6 +9,8 @@ const IncidentDetail: React.FC = () => {
 
   const [incident, setIncident] = useState<Incident | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -16,43 +18,31 @@ const IncidentDetail: React.FC = () => {
         .then((response) => {
           setIncident(response.data);
         })
-        .catch(() => alert("Ошибка загрузки деталей инцидента"))
+        .catch(() => setError('Не удалось загрузить данные инцидента'))
         .finally(() => setIsLoading(false));
     }
   }, [id]);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setIncident((prev) => (prev ? { ...prev, [name]: value } : null));
+    setIncident(prev => prev ? { ...prev, [name]: value } : null);
+    
+    if (error) setError(null);
   };
 
   const handleSave = async () => {
     if (!incident || !id) return;
-    // проверка на валидацию
-    if (!incident.title.trim()) {
-      alert("Заголовок не может быть пустым");
-      return;
-    }
-    if (!incident.type.trim()) {
-      alert("Укажите тип угрозы");
-      return;
-    }
-    if (!incident.description.trim()) {
-      alert("Описание обязательно для заполнения");
+
+    if (!incident.title.trim() || !incident.type.trim() || !incident.description.trim()) {
+      setError('Заполните обязательные поля: Заголовок, Тип и Описание');
       return;
     }
 
-    // если проверка пройдена то отправляем данные
     try {
       await updateIncident(id, incident);
-      alert("Данные успешно сохранены!");
-      navigate("/");
-    } catch (error) {
-      alert("Ошибка при сохранении данных");
+      navigate('/'); 
+    } catch (err) {
+      setError('Ошибка при сохранении данных на сервере');
     }
   };
 
@@ -61,19 +51,21 @@ const IncidentDetail: React.FC = () => {
 
   return (
     <div className="container detail-card">
-      <button onClick={() => navigate("/")} className="btn-back">
-        ← Назад к списку
-      </button>
-
+      <button onClick={() => navigate('/')} className="btn-back">← Назад к списку</button>
+      
       <div className="detail-header">
         <h2 className="title">Редактирование инцидента #{incident.id}</h2>
+        <span className={`severity-badge severity-${
+          incident.severity === 'Высокая' ? 'high' : incident.severity === 'Средняя' ? 'medium' : 'low'
+        }`}>
+          {incident.severity}
+        </span>
       </div>
 
       <div className="detail-info">
-        {}
         <div className="form-group">
           <label>Заголовок:</label>
-          <input
+          <input 
             name="title"
             className="input-field"
             value={incident.title}
@@ -81,10 +73,9 @@ const IncidentDetail: React.FC = () => {
           />
         </div>
 
-        {}
         <div className="form-group">
           <label>Тип угрозы:</label>
-          <input
+          <input 
             name="type"
             className="input-field"
             value={incident.type}
@@ -92,13 +83,12 @@ const IncidentDetail: React.FC = () => {
           />
         </div>
 
-        {}
         <div className="form-group">
           <label>Критичность:</label>
-          <select
-            name="severity"
-            value={incident.severity}
-            onChange={handleChange}
+          <select 
+            name="severity" 
+            value={incident.severity} 
+            onChange={handleChange} 
             className="status-select"
           >
             <option value="Низкая">Низкая</option>
@@ -107,10 +97,9 @@ const IncidentDetail: React.FC = () => {
           </select>
         </div>
 
-        {}
         <div className="form-group">
           <label>Подробное описание:</label>
-          <textarea
+          <textarea 
             name="description"
             className="textarea-field"
             value={incident.description}
@@ -119,13 +108,12 @@ const IncidentDetail: React.FC = () => {
           />
         </div>
 
-        {}
         <div className="form-group">
           <label>Текущий статус:</label>
-          <select
-            name="status"
-            value={incident.status}
-            onChange={handleChange}
+          <select 
+            name="status" 
+            value={incident.status} 
+            onChange={handleChange} 
             className="status-select"
           >
             <option value="На рассмотрении">На рассмотрении</option>
@@ -135,8 +123,15 @@ const IncidentDetail: React.FC = () => {
           </select>
         </div>
 
-        <button onClick={handleSave} className="btn-save">
-          Сохранить все изменения
+        {}
+        {error && <div className="error-message">{error}</div>}
+
+        <button 
+          onClick={handleSave} 
+          className="btn-save"
+          disabled={!incident.title.trim()} 
+        >
+          Сохранить изменения
         </button>
       </div>
     </div>
