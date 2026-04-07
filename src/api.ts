@@ -19,7 +19,7 @@ export const createIncident = (data: Omit<Incident, 'id'>) =>
 
 // Обновить инцидент 
 export const updateIncident = (id: string, data: Partial<Incident>) => 
-  api.put<Incident>(`/incidents/${id}`, data);
+  api.patch<Incident>(`/incidents/${id}`, data);
 
 // Удалить инцидент
 export const deleteIncident = (id: string): Promise<AxiosResponse<void>> =>
