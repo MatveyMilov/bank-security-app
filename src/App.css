@@ -1,113 +1,164 @@
-/* Блокируем системные настройки Safari */
+/* 1. ГЛОБАЛЬНЫЕ НАСТРОЙКИ И СБРОС */
 :root {
-  color-scheme: light !important;
+  color-scheme: dark; /* Сообщаем браузеру, что мы работаем в темной теме */
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #f4f7f9 !important;
-  color: #333 !important;
+  background-color: #0f111a !important; /* Глубокий темный фон */
+  color: #e1e4e8 !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 40px 20px;
 }
 
-/* Белые карточки фона */
+/* 2. КАРТОЧКИ И КОНТЕЙНЕРЫ */
 .list-header, .stats-container, .detail-card, .incident-form {
-  background: #ffffff !important;
+  background: #1c1f2b !important;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   padding: 30px;
   margin-bottom: 25px;
-  border: 1px solid #e1e4e8;
+  border: 1px solid #2d3142;
 }
 
 .title {
-  color: #1a237e !important;
+  color: #ffffff !important;
   text-align: center;
   margin-bottom: 30px;
+  font-weight: 600;
 }
 
-/* ЧЕРНЫЕ ПОЛЯ ВВОДА */
+/* 3. ПОЛЯ ВВОДА (Noir Style) */
 input, textarea, select, 
 .input-field, .textarea-field, .status-select {
   width: 100%;
   padding: 12px 15px;
   margin-top: 8px;
-  background-color: #1a1a1a !important; /* Глубокий черный */
+  background-color: #000000 !important; /* Чисто черный фон */
   color: #ffffff !important;           /* Белый текст */
-  border: 1px solid #000 !important;
+  border: 1px solid #444c63 !important;
   border-radius: 8px;
   font-size: 16px;
   display: block;
   box-sizing: border-box;
   
-  /* Убираем системные стили Apple */
+  /* Фикс для Safari/iOS */
   appearance: none !important;
   -webkit-appearance: none !important;
+  -webkit-text-fill-color: #ffffff !important; 
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
   outline: none;
-  background-color: #000000 !important;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  border-color: #58a6ff !important;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
 }
 
-/* ЧЕРНЫЕ КНОПКИ */
+/* 4. КНОПКИ */
 .btn-add, .btn-save, .btn-submit {
-  background-color: #000000 !important; /* Черный */
-  color: #ffffff !important;           /* Белый текст */
+  background-color: #ffffff !important;
+  color: #000000 !important;
   border: none !important;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  display: inline-block;
-  opacity: 1 !important;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
 }
 
-.btn-add:hover, .btn-submit:hover {
-  background-color: #333333 !important; /* Темно-серый при наведении */
+.btn-add:hover, .btn-save:hover, .btn-submit:hover {
+  background-color: #e1e1e1 !important;
+  transform: translateY(-1px);
 }
 
-/* Кнопки отмены (серые для контраста) */
-.btn-cancel, .btn-back {
-  background-color: #6c757d !important;
-  color: white !important;
-  border: none;
+.btn-back, .btn-cancel {
+  background-color: #30363d !important;
+  color: #c9d1d9 !important;
+  border: 1px solid #444c63 !important;
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 15px;
 }
 
-/* Таблица */
+.btn-delete {
+  background-color: #da3633 !important;
+  color: #ffffff !important;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* 5. ТАБЛИЦА */
 .incident-table {
   width: 100%;
-  border-collapse: collapse;
-  background: white !important;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #1c1f2b !important;
   border-radius: 12px;
   overflow: hidden;
+  border: 1px solid #2d3142;
 }
 
 .incident-table th {
-  background-color: #f8f9fa !important;
+  background-color: #242938 !important;
+  color: #8b949e !important;
   padding: 15px;
   text-align: left;
-  border-bottom: 2px solid #dee2e6;
+  border-bottom: 1px solid #2d3142;
+  font-size: 14px;
+  text-transform: uppercase;
 }
 
 .incident-table td {
   padding: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #2d3142;
+  color: #e1e4e8 !important;
 }
 
-/* Статусы критичности */
-.severity-high { color: #d32f2f !important; font-weight: bold; }
-.severity-medium { color: #f57c00 !important; font-weight: bold; }
-.severity-low { color: #388e3c !important; font-weight: bold; }
+.clickable-title {
+  color: #58a6ff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* 6. СТАТУСЫ КРИТИЧНОСТИ */
+.severity-high { color: #ff7b72 !important; font-weight: bold; }
+.severity-medium { color: #ffa657 !important; font-weight: bold; }
+.severity-low { color: #7ee787 !important; font-weight: bold; }
+
+/* Фикс для графиков */
+.stats-container h3 {
+  color: #ffffff;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.input-error {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+}
+
+.field-error {
+  color: #ff7b72;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
+.severity-medium { color: #f57c00 !important; }
+.severity-low { color: #388e3c !important; }
+
+.btn-delete:hover {
+  background-color: #ff4d4f;
+}

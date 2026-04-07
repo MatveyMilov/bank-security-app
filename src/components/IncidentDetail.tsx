@@ -56,7 +56,8 @@ const IncidentDetail: React.FC = () => {
   if (!incident) return <div>Не найдено</div>;
 
   return (
-    <div className="container detail-card">
+    <div className="container">
+      <div className="detail-card">
       <button onClick={() => navigate('/')} className="btn-back">← Назад</button>
       <div className="detail-info">
         <div className="form-group">
@@ -88,6 +89,7 @@ const IncidentDetail: React.FC = () => {
 
         <button onClick={handleSave} className="btn-save">Сохранить изменения</button>
       </div>
+    </div>
     </div>
   );
 };
