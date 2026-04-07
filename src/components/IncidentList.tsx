@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getIncidents, deleteIncident } from '../api';
 import type { Incident } from '../types';
-import IncidentStats from './IncidentStats'; // Импортируем график
+import IncidentStats from './IncidentStats';
 
 const IncidentList: React.FC = () => {
   const [incidents, setIncidents] = useState<Incident[]>([]);
@@ -25,7 +25,7 @@ const IncidentList: React.FC = () => {
     if (window.confirm('Вы уверены, что хотите удалить этот инцидент?')) {
       try {
         await deleteIncident(id);
-        fetchIncidents(); // Обновляем список после удаления
+        fetchIncidents();
       } catch (error) {
         alert('Не удалось удалить инцидент');
       }
@@ -36,49 +36,54 @@ const IncidentList: React.FC = () => {
 
   return (
     <div className="container">
+      
+      {}
       <div className="list-header">
         <h2 className="title">Журнал инцидентов безопасности</h2>
         <button onClick={() => navigate('/add')} className="btn-add">+ Регистрация инцидента</button>
       </div>
 
-      {/* ГРАФИК СТАТИСТИКИ */}
+      {}
       {incidents.length > 0 && <IncidentStats incidents={incidents} />}
 
-      <table className="incident-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Заголовок</th>
-            <th>Тип</th>
-            <th>Критичность</th>
-            <th>Статус</th>
-            <th>Дата</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          {incidents.map((incident) => (
-            <tr key={incident.id}>
-              <td>{incident.id}</td>
-              <td 
-                className="clickable-title" 
-                onClick={() => navigate(`/incident/${incident.id}`)}
-              >
-                {incident.title}
-              </td>
-              <td>{incident.type}</td>
-              <td className={`severity-${incident.severity === 'Высокая' ? 'high' : incident.severity === 'Средняя' ? 'medium' : 'low'}`}>
-                {incident.severity}
-              </td>
-              <td>{incident.status}</td>
-              <td>{incident.date}</td>
-              <td>
-                <button onClick={() => handleDelete(incident.id)} className="btn-delete">Удалить</button>
-              </td>
+      {}
+      <div className="table-wrapper">
+        <table className="incident-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Заголовок</th>
+              <th>Тип</th>
+              <th>Критичность</th>
+              <th>Статус</th>
+              <th>Дата</th>
+              <th>Действия</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {incidents.map((incident) => (
+              <tr key={incident.id}>
+                <td>{incident.id}</td>
+                <td 
+                  className="clickable-title" 
+                  onClick={() => navigate(`/incident/${incident.id}`)}
+                >
+                  {incident.title}
+                </td>
+                <td>{incident.type}</td>
+                <td className={`severity-cell severity-${incident.severity === 'Высокая' ? 'high' : incident.severity === 'Средняя' ? 'medium' : 'low'}`}>
+                  {incident.severity}
+                </td>
+                <td>{incident.status}</td>
+                <td>{incident.date}</td>
+                <td>
+                  <button onClick={() => handleDelete(incident.id)} className="btn-delete">Удалить</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
