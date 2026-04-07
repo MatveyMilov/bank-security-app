@@ -3,12 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getIncidentById, updateIncident } from '../api';
 import type { Incident } from '../types';
 
-const [error, setError] = useState<string | null>(null);
+
 
 const IncidentDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
+  const [error, setError] = useState<string | null>(null);
   const [incident, setIncident] = useState<Incident | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
