@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getIncidentById, updateIncident } from '../api';
 import type { Incident } from '../types';
 
+const [error, setError] = useState<string | null>(null);
+
 const IncidentDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -40,10 +42,12 @@ const IncidentDetail: React.FC = () => {
     }
 
     try {
-      await updateIncident(id, incident); // Шлет PATCH
-      navigate('/');
+    const { id: _, ...updateData } = incident; 
+    await updateIncident(id, updateData); 
+    navigate('/');
     } catch (err) {
-      alert('Ошибка при сохранении');
+    setError('Ошибка при сохранении на сервере. Проверьте консоль (F12)');
+    console.error(err);
     }
   };
 

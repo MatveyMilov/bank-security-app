@@ -9,81 +9,93 @@ const IncidentList: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  const fetchIncidents = () => {
+  // Функция загрузки данных
+  const loadData = () => {
     setIsLoading(true);
     getIncidents()
-      .then((response) => setIncidents(response.data))
-      .catch(() => alert('Ошибка при загрузке списка'))
+      .then((res) => setIncidents(res.data))
+      .catch(() => console.error('Ошибка загрузки данных'))
       .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
-    fetchIncidents();
+    loadData();
   }, []);
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Вы уверены, что хотите удалить этот инцидент?')) {
+    if (window.confirm('Удалить этот инцидент из базы?')) {
       try {
         await deleteIncident(id);
-        fetchIncidents();
-      } catch (error) {
-        alert('Не удалось удалить инцидент');
+        loadData(); // Обновляем список
+      } catch (err) {
+        alert('Не удалось удалить запись');
       }
     }
   };
 
-  if (isLoading) return <div className="loading-text">Загрузка системы мониторинга...</div>;
+  if (isLoading) return <div className="loading-text">Загрузка данных мониторинга...</div>;
 
   return (
     <div className="container">
-      
-      {}
       <div className="list-header">
         <h2 className="title">Журнал инцидентов безопасности</h2>
-        <button onClick={() => navigate('/add')} className="btn-add">+ Регистрация инцидента</button>
+        <button onClick={() => navigate('/add')} className="btn-add">
+          + Регистрация инцидента
+        </button>
       </div>
 
-      {}
-      {incidents.length > 0 && <IncidentStats incidents={incidents} />}
+      {/* ОТОБРАЖЕНИЕ ГРАФИКА */}
+      {incidents.length > 0 ? (
+        <IncidentStats incidents={incidents} />
+      ) : (
+        <div className="stats-container" style={{ textAlign: 'center' }}>
+          Нет данных для построения графика
+        </div>
+      )}
 
-      {}
-      <div className="table-wrapper">
-        <table className="incident-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Заголовок</th>
-              <th>Тип</th>
-              <th>Критичность</th>
-              <th>Статус</th>
-              <th>Дата</th>
-              <th>Действия</th>
-            </tr>
-          </thead>
-          <tbody>
-            {incidents.map((incident) => (
-              <tr key={incident.id}>
-                <td>{incident.id}</td>
-                <td 
+      {/* ТАБЛИЦА */}
+      <table className="incident-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Заголовок</th>
+            <th>Тип</th>
+            <th>Критичность</th>
+            <th>Статус</th>
+            <th>Дата</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          {incidents.map((incident) => (
+            <tr key={incident.id}>
+              <td>{incident.id}</td>
+              <td>
+                <span 
                   className="clickable-title" 
                   onClick={() => navigate(`/incident/${incident.id}`)}
                 >
                   {incident.title}
-                </td>
-                <td>{incident.type}</td>
-                <td className={`severity-cell severity-${incident.severity === 'Высокая' ? 'high' : incident.severity === 'Средняя' ? 'medium' : 'low'}`}>
-                  {incident.severity}
-                </td>
-                <td>{incident.status}</td>
-                <td>{incident.date}</td>
-                <td>
-                  <button onClick={() => handleDelete(incident.id)} className="btn-delete">Удалить</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                </span>
+              </td>
+              <td>{incident.type}</td>
+              <td className={`severity-cell severity-${
+                incident.severity === 'Высокая' ? 'high' : 
+                incident.severity === 'Средняя' ? 'medium' : 'low'
+              }`}>
+                {incident.severity}
+              </td>
+              <td>{incident.status}</td>
+              <td>{incident.date || '—'}</td>
+              <td>
+                <button onClick={() => handleDelete(incident.id)} className="btn-delete">
+                  Удалить
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
